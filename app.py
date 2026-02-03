@@ -115,26 +115,7 @@ if st.button("🔮 Analyze Career"):
         # -----------------------------
         # Company Recommendations
         # -----------------------------
-        if result["Company Switch Recommended"]:
-            st.subheader("🏢 Recommended Companies")
-
-            companies = result["Recommended Companies"]
-
-            if not companies:
-                st.info("No strong company matches found based on your skills.")
-            else:
-                for idx, comp in enumerate(companies, 1):
-                    st.markdown(
-                        f"""
-**{idx}. {comp['Company']}**
-- 💰 Mean Salary: ₹{int(comp['Mean_Salary']):}
-"""
-                    )
-        else:
-            st.info(
-                "Company switch is not recommended at this time as your salary "
-                "and role alignment are competitive."
-            )
+        
 
 # -----------------------------
 # Footer
