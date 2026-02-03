@@ -7,13 +7,13 @@ import pandas as pd
 
 class CareerPredictor:
     def __init__(self):
-        # Load trained artifacts
+        # ---------------- Load trained artifacts ----------------
         self.model = joblib.load("model.pkl")
         self.tfidf = joblib.load("tfidf.pkl")
         self.edu_encoder = joblib.load("edu_encoder.pkl")
         self.scaler = joblib.load("scaler.pkl")
 
-        # Load jobs dataset (used ONLY for market salary reference)
+        # Jobs dataset is used ONLY for market salary reference
         self.jobs_df = self._load_jobs_data()
 
     # ---------------- SAFE CSV LOADER ----------------
@@ -59,9 +59,10 @@ class CareerPredictor:
         )
 
         numeric = self.scaler.transform([[experience, projects, ai_score]])
+
         return np.hstack([skills_vec, numeric, [[edu_encoded]]])
 
-    # ---------------- MARKET SALARY (OPTIONAL REFERENCE) ----------------
+    # ---------------- MARKET SALARY (OPTIONAL) ----------------
     def market_salary_mean(self, role):
         if self.jobs_df.empty:
             return None
@@ -75,6 +76,22 @@ class CareerPredictor:
 
         return int(role_df["Mean_Salary"].mean())
 
+    # ---------------- EXPERIENCE → SALARY BENCHMARK ----------------
+    def expected_salary_by_experience(self, exp):
+        """
+        Conservative Indian market baseline (LPA converted to INR)
+        """
+        if exp <= 1:
+            return 350000
+        elif exp <= 3:
+            return 700000
+        elif exp <= 5:
+            return 1200000
+        elif exp <= 8:
+            return 2000000
+        else:
+            return 3000000  # 9+ years
+
     # ---------------- MAIN PREDICTION LOGIC ----------------
     def predict(
         self,
@@ -86,7 +103,7 @@ class CareerPredictor:
         current_salary,
         role
     ):
-        # Model inference
+        # --------- ML inference ---------
         X = self.preprocess_input(
             skills, experience, projects, ai_score, education
         )
@@ -100,56 +117,46 @@ class CareerPredictor:
         if prob < 0.45:
             role_switch = True
             role_reason = (
-                "Hiring probability is low for the current role, suggesting "
-                "limited alignment or growth potential."
+                "Hiring probability for the current role is low, indicating limited "
+                "alignment or future growth potential."
             )
         else:
             role_switch = False
             role_reason = (
-                "Your skill set and experience align well with the current role."
+                "Your skills and experience align well with the current role."
             )
 
-        # ---------------- COMPANY SWITCH LOGIC (FIXED & CLEAN) ----------------
+        # ---------------- COMPANY SWITCH LOGIC ----------------
+        expected_salary = self.expected_salary_by_experience(experience)
 
-        # Experience-based minimum salary benchmark (India – conservative)
-        experience_salary_floor = {
-            0: 250000,
-            1: 350000,
-            2: 500000,
-            3: 700000,
-            4: 900000,
-            5: 1100000
-        }
+        absolute_underpaid = current_salary < expected_salary * 0.7
 
-        expected_salary = experience_salary_floor.get(
-            experience, 700000
-        )
-
-        # Absolute underpayment check (MOST IMPORTANT)
-        absolute_underpaid = current_salary < expected_salary * 0.8
-
-        # Relative market check (secondary)
         market_mean = self.market_salary_mean(role)
         relative_underpaid = (
             market_mean is not None
-            and current_salary < market_mean * 0.85
+            and current_salary < market_mean * 0.75
         )
 
         high_confidence = prob >= 0.65
 
-        if high_confidence and (absolute_underpaid or relative_underpaid):
+        if high_confidence and absolute_underpaid:
             company_switch = True
             company_reason = (
-                f"Your current salary (₹{current_salary:,}) is significantly below "
-                f"expected compensation for {experience} years of experience "
-                f"(₹{expected_salary:,}+). With a strong profile, switching "
-                f"companies is recommended."
+                f"With {experience} years of experience, expected compensation is "
+                f"₹{expected_salary:,}+ but your current salary is ₹{current_salary:,}. "
+                "This indicates severe underpayment. A company switch is strongly recommended."
+            )
+        elif high_confidence and relative_underpaid:
+            company_switch = True
+            company_reason = (
+                "Your salary is significantly below the current market average for this role. "
+                "With a strong profile, switching companies can unlock better compensation."
             )
         else:
             company_switch = False
             company_reason = (
-                "Your compensation is reasonably aligned with experience-based "
-                "expectations, so a company switch is not strongly recommended."
+                "Your compensation is reasonably aligned with experience-based and market "
+                "benchmarks. A company switch is optional rather than necessary."
             )
 
         # ---------------- SALARY GROWTH PREDICTION ----------------
@@ -183,12 +190,12 @@ if __name__ == "__main__":
 
     result = predictor.predict(
         skills="javascript react node mongodb",
-        experience=4,
-        projects=3,
-        ai_score=71,
+        experience=10,
+        projects=10,
+        ai_score=75,
         education="Bachelor",
-        current_salary=250000,
-        role="Software Developer"
+        current_salary=350000,
+        role="SDE"
     )
 
     for k, v in result.items():
