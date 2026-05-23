@@ -27,7 +27,7 @@ predictor = load_predictor()
 # -----------------------------
 # User Inputs
 # -----------------------------
-st.header("👤 Candidate Details")
+st.header(" Candidate Details")
 
 skills = st.text_area(
     "Skills",
@@ -54,7 +54,7 @@ current_salary = st.number_input(
 # -----------------------------
 st.markdown("---")
 
-if st.button("🔮 Analyze Career"):
+if st.button("Analyze Career"):
     if not skills.strip():
         st.error("Please enter your skills.")
     else:
@@ -73,7 +73,7 @@ if st.button("🔮 Analyze Career"):
         # -----------------------------
         # Summary Metrics
         # -----------------------------
-        st.subheader("📊 Decision Summary")
+        st.subheader(" Decision Summary")
 
         col1, col2 = st.columns(2)
         with col1:
@@ -93,18 +93,18 @@ if st.button("🔮 Analyze Career"):
         # -----------------------------
         # Explanation
         # -----------------------------
-        st.subheader("💡 Explanation")
+        st.subheader(" Explanation")
 
-        st.markdown("### 🔁 Role Switch Analysis")
+        st.markdown("### Role Switch Analysis")
         st.info(result["Role Switch Reason"])
 
-        st.markdown("### 🏢 Company Switch Analysis")
+        st.markdown("### Company Switch Analysis")
         st.info(result["Company Switch Reason"])
 
         # -----------------------------
         # Salary Insight
         # -----------------------------
-        st.subheader("💰 Salary Insight")
+        st.subheader(" Salary Insight")
         st.metric(
             "Predicted Salary (Next Growth)",
             f"₹{result['Predicted Salary']:,}"
@@ -121,4 +121,6 @@ if st.button("🔮 Analyze Career"):
 # Footer
 # -----------------------------
 st.markdown("---")
-st.caption("Built with ❤️ using Explainable Machine Learning")
+st.caption(
+    "© 2026 Career Intelligence System | Built with Streamlit & Explainable AI"
+)
