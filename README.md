@@ -1,165 +1,111 @@
-# 📈 Career Intelligence System (ML-Powered)
+# 📈 Career Intelligence SaaS System (ML-Powered)
 
-An Explainable Machine Learning system that analyzes a candidate’s profile and provides data-driven career insights, including:
+An enterprise-grade, explainable machine learning platform that analyzes candidate profiles to deliver data-driven career diagnostics, talent alignment metrics, and compensation forecasting benchmarks.
 
--Hiring probability
+**Live System Link:** https://career-intelligence-system.streamlit.app/
 
--Role switch recommendation
+---
 
--Company switch recommendation
+##  System Architecture Overview
 
--Salary growth prediction
+The platform uses a decoupled client-server emulation architecture built purely inside Python:
 
-Built using real datasets, ML models, and business logic, and deployed using Streamlit.
+```text
+User Input Hub (Designation, Skills, Experience)
+      ↓
+Feature Engineering Pipeline (Data Cleaning & Encoding)
+      ↓
+Vector Mapping Engine [TfidfVectorizer & Scaler Transformation]
+      ↓
+      ├─► ML Inference Core (Hiring Probability / Logistic Regression)
+      
+            ↓
+Data-Driven Decision Engine
+      ↓
+UI Display Grid (Streamlit +  Plotly Charts)
+```
 
-## Live Demo
-https://career-intelligence-system.streamlit.app/
+---
 
-## Problem Statement
+##  Key Technical Features
 
-Many professionals struggle to answer questions like:
+### 1. Skill Alignment Matrix
+Replaced rigid keyword rules with an advanced semantic parsing engine. The system performs **Cosine Similarity** computations, comparing user-entered skills directly against industry baseline benchmarks extracted from a localized market dataset (`jobs.csv`). It flags path mismatches mathematically if text similarity drops below a specific threshold.
 
-Should I switch my job or stay?
+### 2. High-Fidelity Decision Summaries
+Generates binary classifier decisions ("Hire" vs. "Reject") using trained logistic regression probability parameters, accompanied by explicit confidence scores.
 
-Am I underpaid for my experience?
+### 3. Predictive Compensation Anchoring
+Calculates compensation ceiling projections by tracking local market averages and experience-based baselines, rendering insights onto high-contrast interactive Plotly data visualizations.
 
-Is my current role aligned with my skillset?
+### 4. Explainable Career Path Mapping
+Cross-references profiles to dynamically recommend strategic role adaptations and organizational adjustments with clear, plain-language reasoning.
 
-Most existing tools are rule-based or generic.
+---
 
-This project solves the problem using:
+## Tech Stack & Dependencies
 
-Machine Learning for hiring probability
+* **Frontend Engine:** Streamlit Core (Enhanced with custom glassmorphic HTML/CSS canvas injection layers)
+* **Visual Graphics Matrix:** Plotly Express & Graph Objects 
+* **Machine Learning Pipeline:** Scikit-Learn (TfidfVectorizer, StandardScaler, LabelEncoder)
+* **Model Serialization:** Joblib
+* **Data Processing Layer:** Pandas, NumPy
 
-Market salary analysis
+---
 
-Experience-based compensation benchmarks
+##  Project Structure
 
-Explainable decision logic
-
-## System Architecture
-User Input (Skills, Experience, Salary)
-        ↓
-Feature Engineering + Encoding
-        ↓
-ML Model (Hiring Probability)
-        ↓
-Business Logic Engine
-        ↓
-Career Recommendations + Salary Insight
-        ↓
-Streamlit UI
-
-📊 Features
-✅ ML-Driven Hiring Prediction
-
-Predicts hiring probability using a trained ML classifier
-
-Uses skills (TF-IDF), experience, projects, AI score, and education
-
-🔁 Role Switch Recommendation
-
-Based on hiring probability
-
-Detects misalignment between profile and role
-
-🏢 Company Switch Recommendation
-
-## Uses:
-
-Experience-based salary benchmarks
-
-Market salary averages
-
-Profile confidence
-
-Avoids misleading recommendations
-
-💰 Salary Growth Prediction
-
-Predicts next salary growth (10–35%)
-
-Depends on hiring probability
-
-🔍 Explainable Output
-
-Every decision comes with clear reasoning
-
-No black-box outputs
-
-## Datasets Used
-Dataset	Purpose
-Resume Dataset	Train hiring prediction model
-Jobs Dataset	Market salary reference
-Job Posts Dataset	Skill patterns
-Company Dataset	Industry context
-
-All datasets are stored locally under data/raw/
-
-## Tech Stack
-💻 Backend & ML
-
-Python
-
-Pandas, NumPy
-
-Scikit-learn
-
-TF-IDF Vectorizer
-
-Logistic Regression / Classifier
-
-Joblib (model persistence)
-
-🎨 Frontend
-
-Streamlit
-
-Matplotlib (minimal usage)
-
-🛠 Tools
-
-Git & GitHub
-
-Streamlit Cloud (deployment)
-
-## Project Structure
+```text
 career-intelligence-system/
 │
-├── app.py                    # Streamlit UI
-├── requirements.txt
-├── README.md
+├── app.py                      # Premium UI Grid Configuration
+├── requirements.txt            # System Dependency Tracking manifest
+├── README.md                   # System Documentation Hub
 │
-├── data/
-│   └── raw/
-│       ├── resumes.csv
-│       ├── jobs.csv
-│       ├── job_post.csv
-│       └── companies.csv
+├── data/raw/
+│   ├── resumes.csv             # Classifier Training Pool Baseline
+│   ├── jobs.csv                # Market Reference Salary & Skill Database
+│   ├── job_post.csv            # Industry Skill Pattern Trackers
+│   └── companies.csv           # Corporate Sector Demographics
 │
 ├── src/
-│   ├── predictor.py          # Core ML + decision logic
-│   ├── train_model.py        # Model training
-│   ├── feature_engineering.py
-│   ├── resume_parser.py
-│   └── skill_mapper.py
+│   ├── predictor.py            # Cosine Similarity Engine & ML Predictor Core
+│   ├── train_model.py          # Serialized Pipeline Model Generator
+│   └── feature_engineering.py  # Matrix Preprocessing Script Layers
 │
-├── model.pkl
-├── tfidf.pkl
-├── scaler.pkl
-└── edu_encoder.pkl
+├── model.pkl                   # Trained Binary Classifier Model
+├── tfidf.pkl                   # Serialized Text Vectorizer Model
+├── scaler.pkl                  # Serialized Numerical Scaling Configuration
+└── edu_encoder.pkl             # Serialized Categorical Categorization Matrix
+```
 
-⚙️ Installation & Setup
-1️⃣ Clone Repository
-git clone https://github.com/<your-username>/career-intelligence-system.git
+---
+
+##  Installation & Local Setup
+
+### 1. Clone the Workspace Repository
+```bash
+git clone https://github.com
 cd career-intelligence-system
+```
 
-2️⃣ Create Virtual Environment
+### 2. Initialize and Activate Your Virtual Environment
+```bash
 python3 -m venv venv
-source venv/bin/activate   # macOS/Linux
+source venv/bin/activate  # macOS / Linux
+# venv\Scripts\activate  # Windows Alternative Prompt
+```
 
-3️⃣ Install Dependencies
+### 3. Install Operational Package Layers
+```bash
 pip install -r requirements.txt
+```
 
-4️⃣ Run Application
+### 4. Boot up the Ecosystem Server
+```bash
 streamlit run app.py
+```
+
+---
+
+
