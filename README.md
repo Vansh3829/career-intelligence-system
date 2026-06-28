@@ -1,4 +1,4 @@
-# 📈 Career Intelligence SaaS System (ML-Powered)
+# 📈 Career Intelligence System (ML-Powered)
 
 An enterprise-grade, explainable machine learning platform that analyzes candidate profiles to deliver data-driven career diagnostics, talent alignment metrics, and compensation forecasting benchmarks.
 
